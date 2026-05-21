@@ -21,8 +21,6 @@ variables:
   PROJECT_NAME: 'reactjs-archetype'
   PORTAL_IMAGE_NAME: 'reactjs-archetype-portal'
   DASHBOARD_IMAGE_NAME: 'reactjs-archetype-dashboard'
-  PORTAL_VITE_BASE_PATH: '/'
-  DASHBOARD_VITE_BASE_PATH: '/dashboard/'
 
 default:
   tags:
@@ -111,7 +109,7 @@ vite:build:portal:
     - .tag-release-rules
   script:
     - if [ -n "$PORTAL_VITE_ENV" ]; then cp "$PORTAL_VITE_ENV" apps/portal/.env; else cp apps/portal/.env.example apps/portal/.env; fi
-    - VITE_BASE_PATH=$PORTAL_VITE_BASE_PATH bun run build:portal
+    - bun run build:portal
   artifacts:
     name: $CI_PROJECT_NAME-portal-$CI_COMMIT_SHORT_SHA
     paths:
@@ -126,7 +124,7 @@ vite:build:dashboard:
     - .tag-release-rules
   script:
     - if [ -n "$DASHBOARD_VITE_ENV" ]; then cp "$DASHBOARD_VITE_ENV" apps/dashboard/.env; else cp apps/dashboard/.env.example apps/dashboard/.env; fi
-    - VITE_BASE_PATH=$DASHBOARD_VITE_BASE_PATH bun run build:dashboard
+    - bun run build:dashboard
   artifacts:
     name: $CI_PROJECT_NAME-dashboard-$CI_COMMIT_SHORT_SHA
     paths:

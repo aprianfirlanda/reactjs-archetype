@@ -134,7 +134,7 @@ bun run typecheck
 bun run test
 ```
 
-Release tags matching `v<major>.<minor>.<patch>.<build>.<revision>-dev`, `-stg`, or no suffix build both apps and Docker images. Override app env files with GitLab file variables named `PORTAL_VITE_ENV` and `DASHBOARD_VITE_ENV`, or override public paths with `PORTAL_VITE_BASE_PATH` and `DASHBOARD_VITE_BASE_PATH`.
+Release tags matching `v<major>.<minor>.<patch>.<build>.<revision>-dev`, `-stg`, or no suffix build both apps and Docker images. Override app env files with GitLab file variables named `PORTAL_VITE_ENV` and `DASHBOARD_VITE_ENV`; those files should include values such as `VITE_BASE_PATH`.
 
 ## Add A New App
 
