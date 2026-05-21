@@ -1,0 +1,75 @@
+# AGENTS.md
+
+Guidance for coding agents working in this repository.
+
+Also use the repo-local Codex skill at `.codex/skills/reactjs-archetype/SKILL.md` when available. The human-readable workflow copy is in `SKILLS.md`.
+
+## Project Shape
+
+This is a Bun workspace monorepo for React app templates.
+
+- Apps live in `apps/*`.
+- Shared packages live in `packages/*`.
+- Internal dependencies use `workspace:*`.
+- The root app is `@reactjs-archetype/portal` in `apps/portal`.
+- The module example app is `@reactjs-archetype/dashboard` in `apps/dashboard`.
+
+## Commands
+
+Run commands from the repository root.
+
+```sh
+bun install
+bun run dev:portal
+bun run dev:dashboard
+bun run build:portal
+bun run build:dashboard
+bun run preview:portal
+bun run preview:dashboard
+bun run typecheck
+bun run lint
+bun run test
+bun run build
+```
+
+Use `bun run lint` to check formatting and lint rules. Use `bun run format` only when intentionally rewriting formatting.
+Use `bun run build` for the full monorepo build, `bun run build:portal` for only the portal app, and `bun run build:dashboard` for only the dashboard app.
+
+## Conventions
+
+- Keep app workspace package names under `@reactjs-archetype/*`.
+- Keep app folders lowercase and URL-friendly, for example `portal`, `dashboard`, or `reports`.
+- Each app should have its own `package.json`, `vite.config.ts`, `tsconfig*.json`, `src`, and `public`.
+- Shared runtime constants belong in `packages/shared`.
+- Shared UI building blocks belong in `packages/ui`.
+- Prefer adding a smoke test for each new app/package so `bun run test` stays meaningful.
+- After renaming, adding, or removing a workspace, run `bun install` to refresh `bun.lock`.
+
+## Validation
+
+Before handing work back, run:
+
+```sh
+bun run typecheck
+bun run lint
+bun run test
+bun run build
+```
+
+If changing the dashboard/module base path behavior, also verify a custom base:
+
+```sh
+env VITE_BASE_PATH=/reports/ bun run build:dashboard
+```
+
+## Rename Checklist
+
+When renaming an app, update all of these:
+
+- `apps/<old-name>` folder to `apps/<new-name>`.
+- The app package name in `apps/<new-name>/package.json`.
+- Root scripts in `package.json`.
+- Shared display names and URLs in `packages/shared/src/index.ts`.
+- Tests in `packages/shared/src/index.test.ts` and affected app test files.
+- App README files.
+- Vite `base` defaults when the public URL path changes.
