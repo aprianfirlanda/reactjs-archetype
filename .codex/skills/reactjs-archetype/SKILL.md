@@ -48,10 +48,11 @@ When adding an app:
 1. Create it under `apps/<app-name>`.
 2. Name it `@reactjs-archetype/<app-name>`.
 3. Add internal dependencies with `workspace:*`.
-4. Configure Vite `base`; module apps should support `VITE_BASE_PATH`.
-5. Add root `dev:<app-name>`, `build:<app-name>`, and `preview:<app-name>` scripts using `bun --filter`.
-6. Add a smoke test.
-7. Run `bun install` and validation.
+4. Configure Vite `base` from app-local `VITE_BASE_PATH`; module apps should support base path overrides.
+5. Add app-local `.env`, `.env.example`, and `Dockerfile`.
+6. Add root `dev:<app-name>`, `build:<app-name>`, and `preview:<app-name>` scripts using `bun --filter`.
+7. Add a smoke test.
+8. Run `bun install` and validation.
 
 When renaming an app:
 

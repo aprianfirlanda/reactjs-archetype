@@ -82,6 +82,40 @@ bun run test
 bun run format
 ```
 
+## Environment
+
+Each app has its own checked-in `.env` defaults and `.env.example` template.
+
+- `apps/portal/.env` sets `VITE_BASE_PATH=/`.
+- `apps/dashboard/.env` sets `VITE_BASE_PATH=/dashboard/`.
+
+Override `VITE_BASE_PATH` when building a module app for another public path:
+
+```sh
+env VITE_BASE_PATH=/reports/ bun run build:dashboard
+```
+
+## Docker
+
+Build images from the repository root so Docker can include workspace packages:
+
+```sh
+docker build -f apps/portal/Dockerfile -t reactjs-archetype-portal .
+docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
+```
+
+Override the dashboard public base path at image build time:
+
+```sh
+docker build -f apps/dashboard/Dockerfile --build-arg VITE_BASE_PATH=/reports/ -t reactjs-archetype-dashboard .
+```
+
+Run an image locally:
+
+```sh
+docker run --rm -p 8080:80 reactjs-archetype-portal
+```
+
 ## Add A New App
 
 Create a new Vite React TypeScript app:
@@ -122,20 +156,30 @@ Configure the app base path in `apps/reports/vite.config.ts`:
 
 ```ts
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 function normalizeBasePath(path = '/reports/') {
   const prefixed = path.startsWith('/') ? path : `/${path}`
   return prefixed.endsWith('/') ? prefixed : `${prefixed}/`
 }
 
-export default defineConfig({
-  base: normalizeBasePath(process.env.VITE_BASE_PATH),
-  server: {
-    port: 5175,
-  },
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    base: normalizeBasePath(env.VITE_BASE_PATH),
+    server: {
+      port: 5175,
+    },
+    plugins: [react()],
+  }
 })
+```
+
+Add `apps/reports/.env` and `apps/reports/.env.example`:
+
+```sh
+VITE_BASE_PATH=/reports/
 ```
 
 Add a root script in `package.json`:

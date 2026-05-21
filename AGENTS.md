@@ -40,6 +40,8 @@ Use `bun run build` for the full monorepo build, `bun run build:portal` for only
 - Keep app workspace package names under `@reactjs-archetype/*`.
 - Keep app folders lowercase and URL-friendly, for example `portal`, `dashboard`, or `reports`.
 - Each app should have its own `package.json`, `vite.config.ts`, `tsconfig*.json`, `src`, and `public`.
+- Each app should have its own `.env`, `.env.example`, and `Dockerfile`.
+- Vite app base paths should come from `VITE_BASE_PATH` through app-local env files.
 - Shared runtime constants belong in `packages/shared`.
 - Shared UI building blocks belong in `packages/ui`.
 - Prefer adding a smoke test for each new app/package so `bun run test` stays meaningful.
@@ -60,6 +62,13 @@ If changing the dashboard/module base path behavior, also verify a custom base:
 
 ```sh
 env VITE_BASE_PATH=/reports/ bun run build:dashboard
+```
+
+Build Docker images from the repository root so workspace packages are available:
+
+```sh
+docker build -f apps/portal/Dockerfile -t reactjs-archetype-portal .
+docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
 ```
 
 ## Rename Checklist

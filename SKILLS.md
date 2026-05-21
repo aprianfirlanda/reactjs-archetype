@@ -18,9 +18,10 @@ Use this when adding another React app under `apps/*`.
 2. Set the app package name to `@reactjs-archetype/<app-name>`.
 3. Add internal dependencies with `workspace:*`.
 4. Configure the Vite `base`.
-5. Add root dev, build, and preview scripts.
-6. Add a smoke test.
-7. Run `bun install` and the full validation suite.
+5. Add app-local `.env`, `.env.example`, and `Dockerfile`.
+6. Add root dev, build, and preview scripts.
+7. Add a smoke test.
+8. Run `bun install` and the full validation suite.
 
 ## Add A New Package
 

@@ -8,4 +8,12 @@ bun run build:portal
 bun run preview:portal
 ```
 
+Default base path is configured in `.env` as `/`.
+
+Build the Docker image from the repository root:
+
+```sh
+docker build -f apps/portal/Dockerfile -t reactjs-archetype-portal .
+```
+
 This app is served at `/` and demonstrates the primary login boundary.
