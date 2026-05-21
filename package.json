@@ -1,0 +1,24 @@
+{
+  "name": "reactjs-archetype",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run dev:portal",
+    "dev:portal": "bun --filter @reactjs-archetype/portal dev",
+    "dev:dashboard": "bun --filter @reactjs-archetype/dashboard dev",
+    "build": "bun --workspaces run build",
+    "typecheck": "bun --workspaces run typecheck",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "test": "bun --workspaces run test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "@types/bun": "1.3.14",
+    "typescript": "latest"
+  }
+}

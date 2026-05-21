@@ -1,0 +1,99 @@
+.module-shell {
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.login-panel,
+.module-panel {
+  width: min(920px, 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.login-panel {
+  max-width: 520px;
+  padding: 40px;
+}
+
+.login-panel img {
+  width: 48px;
+  margin-bottom: 28px;
+}
+
+.module-panel {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 48px;
+}
+
+.metric-grid {
+  display: grid;
+  min-width: 280px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.metric-grid article {
+  display: flex;
+  min-height: 72px;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--bg);
+}
+
+.metric-grid span {
+  color: var(--text-h);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 18px;
+  color: #fff;
+  background: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .module-shell {
+    padding: 20px;
+  }
+
+  .login-panel,
+  .module-panel {
+    padding: 28px;
+  }
+
+  .module-panel {
+    flex-direction: column;
+  }
+}

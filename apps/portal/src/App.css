@@ -1,0 +1,77 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+  padding: 72px 48px;
+  text-align: left;
+}
+
+.brand-mark {
+  display: grid;
+  width: 112px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.brand-mark img {
+  width: 64px;
+}
+
+.auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: auto;
+  padding: 40px 48px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 18px;
+  color: #fff;
+  background: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .hero,
+  .auth-panel {
+    grid-template-columns: 1fr;
+    padding: 32px 20px;
+  }
+
+  .auth-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

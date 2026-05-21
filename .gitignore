@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Logs
+logs
+*.log
+
+# Environment
+*.local
+
+# Editors and OS files
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
