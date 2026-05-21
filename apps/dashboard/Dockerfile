@@ -1,25 +1,15 @@
-# syntax=docker/dockerfile:1
+FROM nginx:mainline-alpine
 
-FROM oven/bun:1.4.0-alpine AS deps
-WORKDIR /app
+ENV NGINX_ROOT_DOCUMENT=/usr/share/nginx/html
 
-COPY package.json bun.lock ./
-COPY apps/portal/package.json apps/portal/package.json
-COPY apps/dashboard/package.json apps/dashboard/package.json
-COPY packages/shared/package.json packages/shared/package.json
-COPY packages/ui/package.json packages/ui/package.json
-RUN bun install --frozen-lockfile
+WORKDIR $NGINX_ROOT_DOCUMENT
 
-FROM deps AS build
-ARG VITE_BASE_PATH=/dashboard/
-ENV VITE_BASE_PATH=$VITE_BASE_PATH
+RUN rm -rf ./*
 
-COPY tsconfig.base.json ./
-COPY apps/dashboard apps/dashboard
-COPY packages packages
-RUN bun run build:dashboard
+COPY apps/dashboard/dist/ .
+COPY apps/dashboard/.nginx/nginx.template.conf /etc/nginx/templates/default.conf.template
 
-FROM nginx:1.29-alpine AS runtime
-COPY --from=build /app/apps/dashboard/dist /usr/share/nginx/html/dashboard
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost:80 || exit 1

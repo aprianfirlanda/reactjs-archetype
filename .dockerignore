@@ -2,8 +2,8 @@
 .idea
 .vscode
 node_modules
-dist
-dist-ssr
+/dist
+/dist-ssr
 logs
 *.log
 *.local

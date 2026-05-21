@@ -13,6 +13,7 @@ Default base path is configured in `.env` as `/`.
 Build the Docker image from the repository root:
 
 ```sh
+bun run build:portal
 docker build -f apps/portal/Dockerfile -t reactjs-archetype-portal .
 ```
 

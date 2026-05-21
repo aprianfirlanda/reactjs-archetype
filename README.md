@@ -100,14 +100,20 @@ env VITE_BASE_PATH=/reports/ bun run build:dashboard
 Build images from the repository root so Docker can include workspace packages:
 
 ```sh
+bun run build:portal
 docker build -f apps/portal/Dockerfile -t reactjs-archetype-portal .
+
+bun run build:dashboard
 docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
 ```
 
-Override the dashboard public base path at image build time:
+The Dockerfiles package the existing Vite build artifacts from `apps/<app>/dist`. In GitLab CI, the `vite:build:*` jobs create those artifacts before the Docker jobs run.
+
+Override the dashboard public base path before building its Docker image:
 
 ```sh
-docker build -f apps/dashboard/Dockerfile --build-arg VITE_BASE_PATH=/reports/ -t reactjs-archetype-dashboard .
+env VITE_BASE_PATH=/reports/ bun run build:dashboard
+docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
 ```
 
 Run an image locally:
@@ -115,6 +121,20 @@ Run an image locally:
 ```sh
 docker run --rm -p 8080:80 reactjs-archetype-portal
 ```
+
+## GitLab CI
+
+The pipeline in `.gitlab-ci.yml` uses Bun for quality and Vite build jobs, then builds separate Docker images for portal and dashboard through the shared Docker template.
+
+Merge requests run:
+
+```sh
+bun run lint
+bun run typecheck
+bun run test
+```
+
+Release tags matching `v<major>.<minor>.<patch>.<build>.<revision>-dev`, `-stg`, or no suffix build both apps and Docker images. Override app env files with GitLab file variables named `PORTAL_VITE_ENV` and `DASHBOARD_VITE_ENV`, or override public paths with `PORTAL_VITE_BASE_PATH` and `DASHBOARD_VITE_BASE_PATH`.
 
 ## Add A New App
 

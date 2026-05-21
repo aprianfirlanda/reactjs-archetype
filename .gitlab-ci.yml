@@ -1,0 +1,196 @@
+stages:
+  - pre-build
+  - quality
+  - build
+  - deploy
+
+cache:
+  key:
+    files:
+      - bun.lock
+  paths:
+    - node_modules/
+    - .bun/install/cache/
+
+variables:
+  BUN_INSTALL_CACHE_DIR: .bun/install/cache
+  DOCKER_VERSION: 'stable'
+  DOCKER_DIND_VERSION: '18.09-dind'
+  DOCKER_CONFIG_FILE: '--config .docker'
+  PROJECT_GROUP_ID: 'com.reactjs-archetype'
+  PROJECT_NAME: 'reactjs-archetype'
+  PORTAL_IMAGE_NAME: 'reactjs-archetype-portal'
+  DASHBOARD_IMAGE_NAME: 'reactjs-archetype-dashboard'
+  PORTAL_VITE_BASE_PATH: '/'
+  DASHBOARD_VITE_BASE_PATH: '/dashboard/'
+
+default:
+  tags:
+    - docker
+
+include:
+  - project: tabeldata.co.id/gitlab-cicd-templates
+    ref: main
+    file: build.docker.gitlab-ci.yml
+  - project: tabeldata.co.id/gitlab-cicd-templates
+    ref: main
+    file: trigger.deploy.gitlab-ci.yml
+
+.bun-job:
+  image: oven/bun:1.4.0-alpine
+  before_script:
+    - apk add --no-cache git
+    - bun install --frozen-lockfile
+
+.tag-release-rules:
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+-dev$/
+      variables:
+        ENVIRONMENT_NAME: development
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+-stg$/
+      variables:
+        ENVIRONMENT_NAME: staging
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+$/
+      variables:
+        ENVIRONMENT_NAME: production
+
+quality:install:
+  stage: quality
+  extends: .bun-job
+  script:
+    - bun install --frozen-lockfile
+  artifacts:
+    name: $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - when: never
+
+lint:
+  stage: quality
+  extends: .bun-job
+  needs:
+    - quality:install
+  script:
+    - bun run lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: on_success
+    - when: never
+
+typecheck:
+  stage: quality
+  extends: .bun-job
+  needs:
+    - quality:install
+  script:
+    - bun run typecheck
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: on_success
+    - when: never
+
+test:
+  stage: quality
+  extends: .bun-job
+  needs:
+    - quality:install
+  script:
+    - bun run test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: on_success
+    - when: never
+
+vite:build:portal:
+  stage: build
+  extends:
+    - .bun-job
+    - .tag-release-rules
+  script:
+    - if [ -n "$PORTAL_VITE_ENV" ]; then cp "$PORTAL_VITE_ENV" apps/portal/.env; else cp apps/portal/.env.example apps/portal/.env; fi
+    - VITE_BASE_PATH=$PORTAL_VITE_BASE_PATH bun run build:portal
+  artifacts:
+    name: $CI_PROJECT_NAME-portal-$CI_COMMIT_SHORT_SHA
+    paths:
+      - apps/portal/dist/*
+  environment:
+    name: $ENVIRONMENT_NAME
+
+vite:build:dashboard:
+  stage: build
+  extends:
+    - .bun-job
+    - .tag-release-rules
+  script:
+    - if [ -n "$DASHBOARD_VITE_ENV" ]; then cp "$DASHBOARD_VITE_ENV" apps/dashboard/.env; else cp apps/dashboard/.env.example apps/dashboard/.env; fi
+    - VITE_BASE_PATH=$DASHBOARD_VITE_BASE_PATH bun run build:dashboard
+  artifacts:
+    name: $CI_PROJECT_NAME-dashboard-$CI_COMMIT_SHORT_SHA
+    paths:
+      - apps/dashboard/dist/*
+  environment:
+    name: $ENVIRONMENT_NAME
+
+build:docker:portal:
+  stage: build
+  extends: .build-docker
+  variables:
+    DOCKERFILE_LOCATION: '-f apps/portal/Dockerfile'
+    DOCKER_HOST: unix:///var/run/docker.sock
+    PROJECT_NAME: $PORTAL_IMAGE_NAME
+  needs:
+    - vite:build:portal
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+(-dev|-stg)?$/
+
+build:docker:dashboard:
+  stage: build
+  extends: .build-docker
+  variables:
+    DOCKERFILE_LOCATION: '-f apps/dashboard/Dockerfile'
+    DOCKER_HOST: unix:///var/run/docker.sock
+    PROJECT_NAME: $DASHBOARD_IMAGE_NAME
+  needs:
+    - vite:build:dashboard
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+(-dev|-stg)?$/
+
+trigger:deploy:review:
+  stage: deploy
+  extends: .trigger_pipeline
+  variables:
+    CI_DEPLOYMENT_ENV: review
+  needs:
+    - vite:build:portal
+    - vite:build:dashboard
+    - build:docker:portal
+    - build:docker:dashboard
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+-dev$/
+
+#trigger:deploy:staging:
+#  stage: deploy
+#  extends: .trigger_pipeline
+#  variables:
+#    CI_DEPLOYMENT_ENV: review
+#    CI_TRIGGER_REF: staging
+#  needs:
+#    - build:docker:portal
+#    - build:docker:dashboard
+#  rules:
+#    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+-stg$/
+#
+#trigger:deploy:prod:
+#  stage: deploy
+#  extends: .trigger_pipeline
+#  variables:
+#    CI_DEPLOYMENT_ENV: review
+#    CI_TRIGGER_REF: main
+#  needs:
+#    - build:docker:portal
+#    - build:docker:dashboard
+#  rules:
+#    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\.\d+\.\d+$/

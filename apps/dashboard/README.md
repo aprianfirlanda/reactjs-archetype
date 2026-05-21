@@ -15,11 +15,13 @@ Override it with `VITE_BASE_PATH=/reports/ bun run build:dashboard`.
 Build the Docker image from the repository root:
 
 ```sh
+bun run build:dashboard
 docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
 ```
 
-Override the Docker image base path:
+Override the Docker image base path by building the Vite artifact first:
 
 ```sh
-docker build -f apps/dashboard/Dockerfile --build-arg VITE_BASE_PATH=/reports/ -t reactjs-archetype-dashboard .
+env VITE_BASE_PATH=/reports/ bun run build:dashboard
+docker build -f apps/dashboard/Dockerfile -t reactjs-archetype-dashboard .
 ```
