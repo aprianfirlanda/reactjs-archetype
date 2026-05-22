@@ -1,58 +1,40 @@
-import { appName, dashboardAppName } from '@reactjs-archetype/shared'
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { AdminLayout } from './layouts/AdminLayout'
+import { LoginPage } from './pages/LoginPage'
+import { ModulesPage } from './pages/ModulesPage'
+import { NotFoundPage } from './pages/NotFoundPage'
+import { ReportsPage } from './pages/ReportsPage'
+import { ServicesPage } from './pages/ServicesPage'
+import { SettingsPage } from './pages/SettingsPage'
+import { ProtectedRoute } from './routes/ProtectedRoute'
+
+function getRouterBasename() {
+  const baseUrl = import.meta.env.BASE_URL
+
+  if (baseUrl === '/') {
+    return undefined
+  }
+
+  return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+}
 
 function App() {
-  const [hasLocalSession, setHasLocalSession] = useState(false)
-  const shouldShowLocalLogin = import.meta.env.DEV && !hasLocalSession
-
   return (
-    <main className="module-shell">
-      {shouldShowLocalLogin ? (
-        <section className="login-panel" aria-label="Local module login">
-          <img src={reactLogo} alt="" />
-          <p className="eyebrow">Local development</p>
-          <h1>{dashboardAppName} login</h1>
-          <p>
-            This login appears only while running the module app directly in
-            development.
-          </p>
-          <button
-            className="button"
-            type="button"
-            onClick={() => setHasLocalSession(true)}
-          >
-            Continue locally
-          </button>
-        </section>
-      ) : (
-        <section className="module-panel" aria-label="Dashboard module">
-          <div>
-            <p className="eyebrow">{appName}</p>
-            <h1>{dashboardAppName}</h1>
-            <p>
-              A module web app mounted at{' '}
-              <code>{import.meta.env.BASE_URL}</code>.
-            </p>
-          </div>
-          <div className="metric-grid">
-            <article>
-              <span>12</span>
-              Active modules
-            </article>
-            <article>
-              <span>4</span>
-              Release lanes
-            </article>
-            <article>
-              <span>99%</span>
-              Session reuse
-            </article>
-          </div>
-        </section>
-      )}
-    </main>
+    <BrowserRouter basename={getRouterBasename()}>
+      <Routes>
+        <Route element={<LoginPage />} path="/login" />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AdminLayout />}>
+            <Route element={<Navigate replace to="/modules" />} index />
+            <Route element={<ModulesPage />} path="/modules" />
+            <Route element={<ReportsPage />} path="/reports" />
+            <Route element={<ServicesPage />} path="/services" />
+            <Route element={<SettingsPage />} path="/settings" />
+            <Route element={<NotFoundPage />} path="*" />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

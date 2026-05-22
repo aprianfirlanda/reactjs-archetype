@@ -12,7 +12,7 @@ This is a Bun workspace monorepo for React app templates.
 - Shared packages live in `packages/*`.
 - Internal dependencies use `workspace:*`.
 - The root app is `@reactjs-archetype/portal` in `apps/portal`.
-- The module example app is `@reactjs-archetype/dashboard` in `apps/dashboard`.
+- The module admin example app is `@reactjs-archetype/dashboard` in `apps/dashboard`.
 
 ## Commands
 
@@ -42,8 +42,14 @@ Use `bun run build` for the full monorepo build, `bun run build:portal` for only
 - Each app should have its own `package.json`, `vite.config.ts`, `tsconfig*.json`, `src`, and `public`.
 - Each app should have its own `.env`, `.env.example`, and `Dockerfile`.
 - Vite app base paths should come from `VITE_BASE_PATH` through app-local env files.
+- Frontend apps use React Router, Tailwind CSS, Headless UI, Heroicons, and `clsx`.
+- Declare frontend libraries in every workspace that imports them; do not rely on root-only undeclared imports.
 - Shared runtime constants belong in `packages/shared`.
 - Shared UI building blocks belong in `packages/ui`.
+- App-specific layouts and pages should stay inside the app until reused by another app.
+- Backend calls should be centralized under an app-local `src/services` folder.
+- Frontend code should call relative `/backend/*` URLs. In development, configure Vite `server.proxy['/backend']` using `VITE_API_PROXY_TARGET`.
+- Template auth uses `access_token` and `refresh_token` in browser `localStorage`; protected routes only check for `access_token` unless real auth is implemented.
 - Prefer adding a smoke test for each new app/package so `bun run test` stays meaningful.
 - After renaming, adding, or removing a workspace, run `bun install` to refresh `bun.lock`.
 

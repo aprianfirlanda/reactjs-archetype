@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.tsx"
   },
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19"
+  },
+  "dependencies": {
+    "clsx": "latest"
   },
   "scripts": {
     "build": "tsc --noEmit",

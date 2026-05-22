@@ -23,6 +23,40 @@ Use this when adding another React app under `apps/*`.
 7. Add a smoke test.
 8. Run `bun install` and the full validation suite.
 
+## Frontend App Baseline
+
+Use this when creating or updating frontend apps.
+
+1. Use React Router for routes.
+2. Use Tailwind CSS through `@tailwindcss/vite`.
+3. Use Headless UI for accessible dialogs, menus, and disclosure patterns.
+4. Use Heroicons for standard app icons.
+5. Use `clsx` for conditional class names.
+6. Declare these dependencies in each app that imports them.
+7. Move reusable UI primitives into `packages/ui`; keep app-specific layouts inside the app until reused.
+
+## Dashboard Admin Module
+
+Use this when changing the `apps/dashboard` module template.
+
+1. Keep `/login` as the public template login route.
+2. Keep protected module routes under the admin layout.
+3. Keep `/modules` as the post-login module menu/list page.
+4. Store `access_token` and `refresh_token` in browser `localStorage`.
+5. Protect routes by checking for `access_token`.
+6. Keep real refresh-token execution out of the template unless backend auth is being implemented.
+
+## Backend Service Calls
+
+Use this when adding backend integrations.
+
+1. Put fetch wrappers and resource services under app-local `src/services`.
+2. Use native `fetch`.
+3. Call relative `/backend/*` URLs from frontend code.
+4. Configure development reverse proxy with `VITE_API_PROXY_TARGET` and Vite `server.proxy['/backend']`.
+5. Attach `Authorization: Bearer <access_token>` when an access token exists.
+6. Add focused tests for service helpers and error handling.
+
 ## Add A New Package
 
 Use this when adding shared code under `packages/*`.

@@ -13,8 +13,14 @@
   "dependencies": {
     "@reactjs-archetype/shared": "workspace:*",
     "@reactjs-archetype/ui": "workspace:*",
+    "@headlessui/react": "latest",
+    "@heroicons/react": "latest",
+    "@tailwindcss/vite": "latest",
+    "clsx": "latest",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "react-router": "latest",
+    "tailwindcss": "latest"
   },
   "devDependencies": {
     "@types/node": "^24.12.3",

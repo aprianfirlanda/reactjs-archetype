@@ -1,6 +1,6 @@
 ---
 name: reactjs-archetype
-description: Use when working in the reactjs-archetype repository, a Bun workspace monorepo for React templates with apps under apps/*, shared packages under packages/*, portal and dashboard example apps, Vite base path behavior, Biome, and Bun test/typecheck/build workflows.
+description: Use when working in the reactjs-archetype repository, a Bun workspace monorepo for React templates with apps under apps/*, shared packages under packages/*, portal and dashboard admin example apps, Vite base/proxy behavior, Tailwind, React Router, Biome, and Bun test/typecheck/build workflows.
 metadata:
   short-description: Work on the Bun React archetype repo
 ---
@@ -16,9 +16,10 @@ Use this skill for work in `/Users/aprianfirlanda/Documents/Coding/Github/reactj
 - Shared packages live in `packages/*`.
 - Internal packages use `workspace:*`.
 - Root app: `apps/portal`, package `@reactjs-archetype/portal`, base `/`.
-- Module example: `apps/dashboard`, package `@reactjs-archetype/dashboard`, default base `/dashboard/`.
+- Module admin example: `apps/dashboard`, package `@reactjs-archetype/dashboard`, default base `/dashboard/`.
 - Shared constants/helpers: `packages/shared`.
 - Shared UI: `packages/ui`.
+- Frontend baseline: React Router, Tailwind CSS via `@tailwindcss/vite`, Headless UI, Heroicons, and `clsx`.
 
 ## Commands
 
@@ -53,6 +54,34 @@ When adding an app:
 6. Add root `dev:<app-name>`, `build:<app-name>`, and `preview:<app-name>` scripts using `bun --filter`.
 7. Add a smoke test.
 8. Run `bun install` and validation.
+
+When building frontend app UI:
+
+1. Use React Router for app routes.
+2. Use Tailwind CSS through `@tailwindcss/vite`.
+3. Use Headless UI for accessible app interactions such as dialogs and menus.
+4. Use Heroicons for navigation and action icons.
+5. Use `clsx` for conditional class names.
+6. Declare each imported frontend library in the consuming workspace package.
+7. Put reusable primitives in `packages/ui`; keep app-specific layouts inside the app until reused.
+
+For the dashboard admin module:
+
+1. Keep `/login` public.
+2. Keep `/modules` as the post-login module menu/list page.
+3. Keep protected pages under the admin layout.
+4. Store `access_token` and `refresh_token` in browser `localStorage`.
+5. Protect routes by checking for `access_token`.
+6. Keep real refresh-token execution out of the template unless backend auth is being implemented.
+
+For backend calls:
+
+1. Put fetch wrappers and resource services under app-local `src/services`.
+2. Use native `fetch`.
+3. Frontend code should call relative `/backend/*` URLs.
+4. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']`.
+5. Attach `Authorization: Bearer <access_token>` when an access token exists.
+6. Add focused tests for service helpers and error handling.
 
 When renaming an app:
 
