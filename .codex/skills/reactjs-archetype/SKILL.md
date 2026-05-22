@@ -17,8 +17,8 @@ Use this skill for work in `/Users/aprianfirlanda/Documents/Coding/Github/reactj
 - Internal packages use `workspace:*`.
 - Root app: `apps/portal`, package `@reactjs-archetype/portal`, base `/`.
 - Module admin example: `apps/dashboard`, package `@reactjs-archetype/dashboard`, default base `/dashboard/`.
-- Shared constants/helpers: `packages/shared`.
-- Shared UI: `packages/ui`.
+- Shared constants/auth/fetch helpers: `packages/shared`.
+- Shared UI, app shell layouts, login pages, not-found pages, and theme CSS: `packages/ui`.
 - Frontend baseline: React Router, Tailwind CSS via `@tailwindcss/vite`, Headless UI, Heroicons, and `clsx`.
 
 ## Commands
@@ -63,7 +63,9 @@ When building frontend app UI:
 4. Use Heroicons for navigation and action icons.
 5. Use `clsx` for conditional class names.
 6. Declare each imported frontend library in the consuming workspace package.
-7. Put reusable primitives in `packages/ui`; keep app-specific layouts inside the app until reused.
+7. Put reusable primitives, app shell layouts, login pages, not-found pages, and theme CSS in `packages/ui`.
+8. Apps should import `@reactjs-archetype/ui/theme.css` from their entry CSS.
+9. Keep app-specific route definitions, navigation data, and domain pages inside the app.
 
 For the dashboard admin module:
 
@@ -76,12 +78,13 @@ For the dashboard admin module:
 
 For backend calls:
 
-1. Put fetch wrappers and resource services under app-local `src/services`.
-2. Use native `fetch`.
-3. Frontend code should call relative `/backend/*` URLs.
-4. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']`.
-5. Attach `Authorization: Bearer <access_token>` when an access token exists.
-6. Add focused tests for service helpers and error handling.
+1. Put shared fetch wrappers in `packages/shared`.
+2. Put app-specific resource services under app-local `src/services`.
+3. Use native `fetch`.
+4. Frontend code should call relative `/backend/*` URLs.
+5. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']`.
+6. Attach `Authorization: Bearer <access_token>` when an access token exists.
+7. Add focused tests for service helpers and error handling.
 
 When renaming an app:
 

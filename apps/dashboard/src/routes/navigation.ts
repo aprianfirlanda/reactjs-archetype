@@ -4,17 +4,14 @@ import {
   RectangleGroupIcon,
   ServerStackIcon,
 } from '@heroicons/react/24/outline'
-import type { ComponentType, SVGProps } from 'react'
+import type { AppNavigationItem } from '@reactjs-archetype/ui'
 
-export type NavigationItem = {
-  name: string
+export type DashboardNavigationItem = AppNavigationItem & {
   description: string
-  href: string
-  icon: ComponentType<SVGProps<SVGSVGElement>>
   status: 'Active' | 'Maintenance' | 'Draft'
 }
 
-export const moduleNavigation: NavigationItem[] = [
+export const moduleNavigation: DashboardNavigationItem[] = [
   {
     name: 'Module Registry',
     description: 'Browse all available administration modules.',

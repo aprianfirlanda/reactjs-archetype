@@ -1,4 +1,4 @@
-import { apiFetch } from './http'
+import { apiFetch } from '@reactjs-archetype/shared'
 
 export type ModuleSummary = {
   id: string

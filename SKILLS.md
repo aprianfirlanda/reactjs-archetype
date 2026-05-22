@@ -33,7 +33,9 @@ Use this when creating or updating frontend apps.
 4. Use Heroicons for standard app icons.
 5. Use `clsx` for conditional class names.
 6. Declare these dependencies in each app that imports them.
-7. Move reusable UI primitives into `packages/ui`; keep app-specific layouts inside the app until reused.
+7. Move reusable UI primitives, shell layouts, login pages, and not-found pages into `packages/ui`.
+8. Keep shared theme CSS in `packages/ui` and import `@reactjs-archetype/ui/theme.css` from app entry CSS.
+9. Keep app-specific routes, navigation data, and domain pages inside the app.
 
 ## Dashboard Admin Module
 
@@ -50,12 +52,13 @@ Use this when changing the `apps/dashboard` module template.
 
 Use this when adding backend integrations.
 
-1. Put fetch wrappers and resource services under app-local `src/services`.
-2. Use native `fetch`.
-3. Call relative `/backend/*` URLs from frontend code.
-4. Configure development reverse proxy with `VITE_API_PROXY_TARGET` and Vite `server.proxy['/backend']`.
-5. Attach `Authorization: Bearer <access_token>` when an access token exists.
-6. Add focused tests for service helpers and error handling.
+1. Put shared fetch wrappers in `packages/shared`.
+2. Put app-specific resource services under app-local `src/services`.
+3. Use native `fetch`.
+4. Call relative `/backend/*` URLs from frontend code.
+5. Configure development reverse proxy with `VITE_API_PROXY_TARGET` and Vite `server.proxy['/backend']`.
+6. Attach `Authorization: Bearer <access_token>` when an access token exists.
+7. Add focused tests for service helpers and error handling.
 
 ## Add A New Package
 

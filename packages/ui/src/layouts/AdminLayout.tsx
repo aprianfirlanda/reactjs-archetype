@@ -12,26 +12,53 @@ import {
   ChevronDownIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { dashboardAppName } from '@reactjs-archetype/shared'
 import { clsx } from 'clsx'
+import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { Fragment, useState } from 'react'
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
-import { clearAuthTokens } from '../auth/tokens'
-import { moduleNavigation } from '../routes/navigation'
+import { NavLink, Outlet, useLocation } from 'react-router'
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+export type AppNavigationItem = {
+  name: string
+  description?: string
+  href: string
+  icon: ComponentType<SVGProps<SVGSVGElement>>
+  status?: string
+}
+
+export type AdminLayoutProps = {
+  appName: string
+  eyebrow?: string
+  navigation: AppNavigationItem[]
+  userLabel?: string
+  children?: ReactNode
+  onLogout: () => void
+}
+
+function SidebarContent({
+  appName,
+  eyebrow,
+  navigation,
+  onNavigate,
+}: {
+  appName: string
+  eyebrow?: string
+  navigation: AppNavigationItem[]
+  onNavigate?: () => void
+}) {
   return (
     <div className="flex h-full flex-col bg-slate-950 text-white">
       <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-6">
         <div>
-          <p className="text-xs font-semibold uppercase text-blue-200">
-            Admin Module
-          </p>
-          <p className="text-base font-semibold">{dashboardAppName}</p>
+          {eyebrow ? (
+            <p className="text-xs font-semibold uppercase text-blue-200">
+              {eyebrow}
+            </p>
+          ) : null}
+          <p className="text-base font-semibold">{appName}</p>
         </div>
       </div>
       <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
-        {moduleNavigation.map((item) => (
+        {navigation.map((item) => (
           <NavLink
             className={({ isActive }) =>
               clsx(
@@ -54,22 +81,24 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   )
 }
 
-function pageTitle(pathname: string) {
-  return (
-    moduleNavigation.find((item) => item.href === pathname)?.name ??
-    dashboardAppName
-  )
+function pageTitle(
+  pathname: string,
+  navigation: AppNavigationItem[],
+  appName: string,
+) {
+  return navigation.find((item) => item.href === pathname)?.name ?? appName
 }
 
-export function AdminLayout() {
+export function AdminLayout({
+  appName,
+  children,
+  eyebrow = 'Admin Module',
+  navigation,
+  onLogout,
+  userLabel = 'Operator',
+}: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const navigate = useNavigate()
   const location = useLocation()
-
-  function handleLogout() {
-    clearAuthTokens()
-    navigate('/login', { replace: true })
-  }
 
   return (
     <div className="min-h-svh bg-slate-100">
@@ -92,13 +121,22 @@ export function AdminLayout() {
                 <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
-            <SidebarContent onNavigate={() => setSidebarOpen(false)} />
+            <SidebarContent
+              appName={appName}
+              eyebrow={eyebrow}
+              navigation={navigation}
+              onNavigate={() => setSidebarOpen(false)}
+            />
           </DialogPanel>
         </div>
       </Dialog>
 
       <aside className="fixed inset-y-0 left-0 hidden w-72 lg:block">
-        <SidebarContent />
+        <SidebarContent
+          appName={appName}
+          eyebrow={eyebrow}
+          navigation={navigation}
+        />
       </aside>
 
       <div className="lg:pl-72">
@@ -114,12 +152,12 @@ export function AdminLayout() {
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm text-slate-500">Government admin</p>
             <h1 className="truncate text-lg font-semibold text-slate-950">
-              {pageTitle(location.pathname)}
+              {pageTitle(location.pathname, navigation, appName)}
             </h1>
           </div>
           <Menu as="div" className="relative">
             <MenuButton className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-700">
-              Operator
+              {userLabel}
               <ChevronDownIcon className="h-4 w-4" aria-hidden="true" />
             </MenuButton>
             <MenuItems
@@ -133,7 +171,7 @@ export function AdminLayout() {
                       'flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-slate-700',
                       focus && 'bg-slate-100',
                     )}
-                    onClick={handleLogout}
+                    onClick={onLogout}
                     type="button"
                   >
                     <ArrowRightStartOnRectangleIcon
@@ -149,9 +187,7 @@ export function AdminLayout() {
         </header>
 
         <main className="px-4 py-6 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <Outlet />
-          </div>
+          <div className="mx-auto max-w-7xl">{children ?? <Outlet />}</div>
         </main>
       </div>
     </div>

@@ -1,5 +1,5 @@
+import { hasAccessToken } from '@reactjs-archetype/shared'
 import { Navigate, Outlet, useLocation } from 'react-router'
-import { hasAccessToken } from '../auth/tokens'
 
 export function ProtectedRoute() {
   const location = useLocation()
