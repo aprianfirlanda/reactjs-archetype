@@ -48,7 +48,7 @@ Use `bun run build` for the full monorepo build, `bun run build:portal` for only
 - Shared UI building blocks, app shell layouts, login pages, and not-found pages belong in `packages/ui`.
 - Shared theme CSS belongs in `packages/ui`; apps should import `@reactjs-archetype/ui/theme.css` from their entry CSS.
 - App-specific route definitions, navigation data, resource services, and domain pages should stay inside the app.
-- Frontend code should call relative `/backend/*` URLs. In development, configure Vite `server.proxy['/backend']` using `VITE_API_PROXY_TARGET` and rewrite `/backend` to `/` before forwarding.
+- Frontend code should call relative `/backend/*` URLs. In development, configure Vite `server.proxy['/backend']` using `VITE_API_PROXY_TARGET`; rewrite `/backend` to `/` only when the proxy target host is `localhost` or `127.0.0.1`.
 - Template auth uses `access_token` and `refresh_token` in browser `localStorage`; protected routes only check for `access_token` unless real auth is implemented.
 - Prefer adding a smoke test for each new app/package so `bun run test` stays meaningful.
 - After renaming, adding, or removing a workspace, run `bun install` to refresh `bun.lock`.

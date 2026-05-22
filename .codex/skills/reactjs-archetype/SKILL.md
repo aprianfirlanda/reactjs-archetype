@@ -82,7 +82,7 @@ For backend calls:
 2. Put app-specific resource services under app-local `src/services`.
 3. Use native `fetch`.
 4. Frontend code should call relative `/backend/*` URLs.
-5. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']` and rewrite `/backend` to `/`.
+5. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']`; rewrite `/backend` to `/` only for `localhost` or `127.0.0.1` targets.
 6. Attach `Authorization: Bearer <access_token>` when an access token exists.
 7. Add focused tests for service helpers and error handling.
 

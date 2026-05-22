@@ -56,7 +56,7 @@ Use this when adding backend integrations.
 2. Put app-specific resource services under app-local `src/services`.
 3. Use native `fetch`.
 4. Call relative `/backend/*` URLs from frontend code.
-5. Configure development reverse proxy with `VITE_API_PROXY_TARGET`, Vite `server.proxy['/backend']`, and a rewrite from `/backend` to `/`.
+5. Configure development reverse proxy with `VITE_API_PROXY_TARGET` and Vite `server.proxy['/backend']`; rewrite `/backend` to `/` only for `localhost` or `127.0.0.1` targets.
 6. Attach `Authorization: Bearer <access_token>` when an access token exists.
 7. Add focused tests for service helpers and error handling.
 

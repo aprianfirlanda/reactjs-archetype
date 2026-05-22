@@ -7,6 +7,27 @@ function normalizeBasePath(path = '/dashboard/') {
   return prefixed.endsWith('/') ? prefixed : `${prefixed}/`
 }
 
+function shouldRewriteBackendProxy(target: string) {
+  try {
+    const { hostname } = new URL(target)
+
+    return hostname === 'localhost' || hostname === '127.0.0.1'
+  } catch {
+    return false
+  }
+}
+
+function createBackendProxy(target: string) {
+  return {
+    target,
+    changeOrigin: true,
+    rewrite: shouldRewriteBackendProxy(target)
+      ? (path: string) => path.replace(/^\/backend/, '') || '/'
+      : undefined,
+    secure: false,
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const apiProxyTarget = env.VITE_API_PROXY_TARGET
@@ -17,12 +38,7 @@ export default defineConfig(({ mode }) => {
       port: 5174,
       proxy: apiProxyTarget
         ? {
-            '/backend': {
-              target: apiProxyTarget,
-              changeOrigin: true,
-              rewrite: (path) => path.replace(/^\/backend/, '') || '/',
-              secure: false,
-            },
+            '/backend': createBackendProxy(apiProxyTarget),
           }
         : undefined,
     },
