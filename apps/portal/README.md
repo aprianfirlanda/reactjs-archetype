@@ -8,7 +8,7 @@ bun run build:portal
 bun run preview:portal
 ```
 
-Default base path is configured in `.env` as `/`.
+Default base path is configured in `.env.local` as `/`.
 
 Build the Docker image from the repository root:
 

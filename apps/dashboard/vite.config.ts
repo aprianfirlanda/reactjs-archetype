@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
             '/backend': {
               target: apiProxyTarget,
               changeOrigin: true,
+              rewrite: (path) => path.replace(/^\/backend/, '') || '/',
               secure: false,
             },
           }

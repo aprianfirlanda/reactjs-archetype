@@ -50,7 +50,7 @@ When adding an app:
 2. Name it `@reactjs-archetype/<app-name>`.
 3. Add internal dependencies with `workspace:*`.
 4. Configure Vite `base` from app-local `VITE_BASE_PATH`; module apps should support base path overrides.
-5. Add app-local `.env`, `.env.example`, and `Dockerfile`.
+5. Add app-local `.env.local`, `.env.example`, and `Dockerfile`.
 6. Add root `dev:<app-name>`, `build:<app-name>`, and `preview:<app-name>` scripts using `bun --filter`.
 7. Add a smoke test.
 8. Run `bun install` and validation.
@@ -82,7 +82,7 @@ For backend calls:
 2. Put app-specific resource services under app-local `src/services`.
 3. Use native `fetch`.
 4. Frontend code should call relative `/backend/*` URLs.
-5. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']`.
+5. In development, use `VITE_API_PROXY_TARGET` with Vite `server.proxy['/backend']` and rewrite `/backend` to `/`.
 6. Attach `Authorization: Bearer <access_token>` when an access token exists.
 7. Add focused tests for service helpers and error handling.
 

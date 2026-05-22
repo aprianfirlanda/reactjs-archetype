@@ -84,10 +84,10 @@ bun run format
 
 ## Environment
 
-Each app has its own checked-in `.env` defaults and `.env.example` template.
+Each app has its own local `.env.local` defaults and checked-in `.env.example` template.
 
-- `apps/portal/.env` sets `VITE_BASE_PATH=/`.
-- `apps/dashboard/.env` sets `VITE_BASE_PATH=/dashboard/`.
+- `apps/portal/.env.local` sets `VITE_BASE_PATH=/`.
+- `apps/dashboard/.env.local` sets `VITE_BASE_PATH=/dashboard/`.
 
 Override `VITE_BASE_PATH` when building a module app for another public path:
 
@@ -134,7 +134,7 @@ bun run typecheck
 bun run test
 ```
 
-Release tags matching `v<major>.<minor>.<patch>.<build>.<revision>-dev`, `-stg`, or no suffix build both apps and Docker images. Override app env files with GitLab file variables named `PORTAL_VITE_ENV` and `DASHBOARD_VITE_ENV`; those files should include values such as `VITE_BASE_PATH`.
+Release tags matching `v<major>.<minor>.<patch>.<build>.<revision>-dev`, `-stg`, or no suffix build both apps and Docker images. Override app local env files with GitLab file variables named `PORTAL_VITE_ENV` and `DASHBOARD_VITE_ENV`; those files should include values such as `VITE_BASE_PATH`.
 
 ## Add A New App
 
@@ -196,7 +196,7 @@ export default defineConfig(({ mode }) => {
 })
 ```
 
-Add `apps/reports/.env` and `apps/reports/.env.example`:
+Add `apps/reports/.env.local` and `apps/reports/.env.example`:
 
 ```sh
 VITE_BASE_PATH=/reports/

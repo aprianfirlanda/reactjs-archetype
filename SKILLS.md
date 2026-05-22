@@ -18,7 +18,7 @@ Use this when adding another React app under `apps/*`.
 2. Set the app package name to `@reactjs-archetype/<app-name>`.
 3. Add internal dependencies with `workspace:*`.
 4. Configure the Vite `base`.
-5. Add app-local `.env`, `.env.example`, and `Dockerfile`.
+5. Add app-local `.env.local`, `.env.example`, and `Dockerfile`.
 6. Add root dev, build, and preview scripts.
 7. Add a smoke test.
 8. Run `bun install` and the full validation suite.
@@ -56,7 +56,7 @@ Use this when adding backend integrations.
 2. Put app-specific resource services under app-local `src/services`.
 3. Use native `fetch`.
 4. Call relative `/backend/*` URLs from frontend code.
-5. Configure development reverse proxy with `VITE_API_PROXY_TARGET` and Vite `server.proxy['/backend']`.
+5. Configure development reverse proxy with `VITE_API_PROXY_TARGET`, Vite `server.proxy['/backend']`, and a rewrite from `/backend` to `/`.
 6. Attach `Authorization: Bearer <access_token>` when an access token exists.
 7. Add focused tests for service helpers and error handling.
 
